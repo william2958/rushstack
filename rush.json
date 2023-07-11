@@ -138,6 +138,7 @@
      * or you could just have a single category called "default".
      */
     "reviewCategories": [
+      "vscode-extensions", // vscode extensions
       "libraries", // library projects that ship
       "tests" // non-shipping test projects
     ],
@@ -1157,6 +1158,13 @@
       "projectFolder": "webpack/webpack5-localization-plugin",
       "reviewCategory": "libraries",
       "shouldPublish": true
+    },
+
+    // "vscode-extensions" folder (alphabetical order)
+    {
+      "packageName": "rush-vscode-assistant",
+      "projectFolder": "vscode-extensions/rush-vscode-assistant",
+      "reviewCategory": "vscode-extensions"
     }
   ]
 }

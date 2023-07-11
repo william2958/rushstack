@@ -62,6 +62,19 @@
 			"type": "node",
 			"request": "attach",
 			"port": 5858
+		},
+		{
+			"name": "Launch Rush Extension",
+			"type": "extensionHost",
+			"cwd": "${workspaceFolder}/vscode-extensions/rush-vscode-assistant",
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/rush-vscode-assistant"
+			],
+			"outFiles": [
+				"${workspaceFolder}/vscode-extensions/rush-vscode-assistant/lib/**/*.js"
+			],
+			"preLaunchTask": "npm: build:watch - vscode-extensions/rush-vscode-assistant"
 		}
 	]
 }
