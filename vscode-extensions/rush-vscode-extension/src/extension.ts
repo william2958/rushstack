@@ -1,14 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
-// See LICENSE in the project root for license information.
-
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { LogLevel, setLogLevel, terminal } from './logic/logger';
 import { RushWorkspace } from './logic/RushWorkspace';
+import { RushCommandsProvider } from './providers/RushCommandsProvider';
 import { RushProjectsProvider } from './providers/RushProjectsProvider';
 import { RushTaskProvider } from './providers/TaskProvider';
-import { RushCommandWebViewPanel } from './logic/RushCommandWebViewPanel';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -45,20 +42,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     });
     vscode.tasks.registerTaskProvider('rushstack', RushTaskProvider.getInstance());
 
-    // const rushCommandsProvider: RushCommandsProvider = new RushCommandsProvider(context);
-    // // Rush Commands TreeView
-    // vscode.window.createTreeView('rushCommands', {
-    //   treeDataProvider: rushCommandsProvider
-    // });
-    // context.subscriptions.push(
-    //   vscode.commands.registerCommand('rushstack.refresh', async () => {
-    //     const workspaceFolderPaths: string[] =
-    //       vscode.workspace.workspaceFolders?.map((x) => x.uri.fsPath) || [];
-    //     await RushWorkspace.initializeFromWorkspaceFolderPathsAsync(workspaceFolderPaths);
-    //   })
-    // );
-
-    RushCommandWebViewPanel.initialize(context).reveal();
+    const rushCommandsProvider: RushCommandsProvider = new RushCommandsProvider(context);
+    // Rush Commands TreeView
+    vscode.window.createTreeView('rushCommands', {
+      treeDataProvider: rushCommandsProvider
+    });
+    context.subscriptions.push(
+      vscode.commands.registerCommand('rushstack.refresh', async () => {
+        const workspaceFolderPaths: string[] =
+          vscode.workspace.workspaceFolders?.map((x) => x.uri.fsPath) || [];
+        await RushWorkspace.initializeFromWorkspaceFolderPathsAsync(workspaceFolderPaths);
+      })
+    );
   }
 }
 

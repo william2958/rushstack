@@ -8,7 +8,6 @@ import { terminal } from './logger';
 
 import type { CommandLineAction } from '@rushstack/rush-vscode-command-webview';
 import type * as RushLib from '@rushstack/rush-sdk';
-import type * as RushCommandLine from '@rushstack/ts-command-line';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 declare let ___DEV___: boolean;
@@ -27,7 +26,7 @@ export class RushWorkspace {
   private _rushLib: typeof RushLib | undefined;
   private _startingFolderPath: string;
   private _rushConfiguration: RushLib.RushConfiguration;
-  private _rushCommandLineParser: RushCommandLine.CommandLineParser | undefined;
+  private _rushCommandLineParser: RushLib.RushCommandLineParser | undefined;
   private static _rushWorkspace: RushWorkspace | undefined;
 
   private static readonly _onDidChangeWorkspace: vscode.EventEmitter<RushWorkspace> =
@@ -38,7 +37,7 @@ export class RushWorkspace {
   private constructor({ rushLib, startingFolder }: IRushWorkspace) {
     this._rushLib = rushLib;
     this._startingFolderPath = startingFolder;
-    const { RushConfiguration } = rushLib;
+    const { RushConfiguration, RushCommandLineParser } = rushLib;
     // existence check for API
     if (!RushConfiguration) {
       throw new Error('load RushConfiguration from rush-sdk failed');
@@ -53,13 +52,14 @@ export class RushWorkspace {
     terminal.writeDebugLine(`rushConfiguration loaded from: ${startingFolder}`);
     this._rushConfiguration = rushConfiguration;
 
-    // if (RushCommandLine) {
-    //   this._rushCommandLineParser = new RushCommandLine({
-    //     cwd: startingFolder
-    //   });
-    // } else {
-    //   terminal.writeWarningLine(`load RushCommandLineParser from rush-sdk failed`);
-    // }
+    if (RushCommandLineParser) {
+      this._rushCommandLineParser = new RushCommandLineParser({
+        cwd: startingFolder
+      });
+    } else {
+      terminal.writeWarningLine(`load RushCommandLineParser from rush-sdk failed...`);
+      terminal.writeWarningLine(JSON.stringify(rushLib));
+    }
 
     RushWorkspace._rushWorkspace = this;
     RushWorkspace._onDidChangeWorkspace.fire(this);
@@ -107,9 +107,11 @@ export class RushWorkspace {
           continue;
         }
       } catch (e) {
+        terminal.writeWarningLine('Error trying to load rushsdkloader', e);
         continue;
       }
       try {
+        terminal.writeDebugLine('rush lib version details: ', JSON.stringify(rushLib.RushCommandLineParser));
         return new RushWorkspace({ rushLib, startingFolder: folderPath });
       } catch (e) {
         terminal.writeDebugLine(`Failed to initialize workspace from ${folderPath}: ${e}`);

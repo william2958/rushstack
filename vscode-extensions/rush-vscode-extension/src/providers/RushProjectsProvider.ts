@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
-// See LICENSE in the project root for license information.
-
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { JsonFile, JsonObject } from '@rushstack/node-core-library';
@@ -9,7 +6,6 @@ import { terminal } from '../logic/logger';
 import { RushWorkspace } from '../logic/RushWorkspace';
 
 import type { RushConfiguration, RushConfigurationProject } from '@rushstack/rush-sdk';
-import { RushCommandWebViewPanel } from '../logic/RushCommandWebViewPanel';
 
 interface IRushProjectParams {
   label: string;
@@ -60,7 +56,7 @@ class RushProjectScript extends vscode.TreeItem {
     this.scriptValue = scriptValue;
 
     // this.tooltip = '';
-    this.description = 'test descriptiosn';
+    // this.description = '';
   }
 }
 
@@ -82,9 +78,8 @@ export class RushProjectsProvider implements vscode.TreeDataProvider<RushProject
     });
     this._rushConfiguration = rushWorkspace.rushConfiguration;
 
-    const commandNames: readonly ['revealInExplorer', 'revealProjectDetail', 'runProjectScript'] = [
+    const commandNames: readonly ['revealInExplorer', 'runProjectScript'] = [
       'revealInExplorer',
-      'revealProjectDetail',
       'runProjectScript'
     ] as const;
 
@@ -113,20 +108,6 @@ export class RushProjectsProvider implements vscode.TreeDataProvider<RushProject
       terminal.writeDebugLine(`Revealing ${projectFolder} in explorer`);
       return await vscode.commands.executeCommand('revealInExplorer', vscode.Uri.file(projectFolder));
     }
-  }
-
-  public async revealProjectDetailAsync(element: RushProject): Promise<void> {
-    const { rushConfigurationProject } = element;
-    console.log('Explorer clicked: ', rushConfigurationProject.packageName);
-    RushCommandWebViewPanel.getInstance().postMessage({
-      command: 'updateProject',
-      state: {
-        projectName: rushConfigurationProject.packageName,
-        projectVersion: rushConfigurationProject.packageJson.version,
-        dependencies: rushConfigurationProject.packageJson.dependencies,
-        devDependencies: rushConfigurationProject.packageJson.devDependencies
-      }
-    });
   }
 
   public async runProjectScriptAsync(element: RushProjectScript): Promise<void> {
