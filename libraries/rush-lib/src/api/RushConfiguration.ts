@@ -288,6 +288,14 @@ export class RushConfiguration {
   public readonly commonTempFolder: string;
 
   /**
+   * The folder where temporary files will be stored for subspaces. The specific folder will
+   * append the subspace name to this path.
+   *
+   * Example: `C:\MyRepo\common\temp\<subspace_name>
+   */
+  public readonly commonTempSubspaceFolderRoot: string;
+
+  /**
    * The folder where automation scripts are stored.  This is always a subfolder called "scripts"
    * under the common folder.
    * Example: `C:\MyRepo\common\scripts`
