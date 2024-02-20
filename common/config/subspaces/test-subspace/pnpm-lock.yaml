@@ -1,0 +1,29 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+overrides:
+  package-json: ^7
+
+packageExtensionsChecksum: e59cfa9a35183eeeb6f2ac48c9ddd4b2
+
+importers:
+
+  .: {}
+
+  ../../../build-tests/install-test-workspace:
+    devDependencies:
+      '@microsoft/rush-lib':
+        specifier: link:../../libraries/rush-lib
+        version: link:../../libraries/rush-lib
+      '@rushstack/node-core-library':
+        specifier: link:../../libraries/node-core-library
+        version: link:../../libraries/node-core-library
+      '@rushstack/rush-sdk':
+        specifier: link:../../libraries/rush-sdk
+        version: link:../../libraries/rush-sdk
+      '@rushstack/terminal':
+        specifier: link:../../libraries/terminal
+        version: link:../../libraries/terminal

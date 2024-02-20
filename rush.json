@@ -866,7 +866,8 @@
       "packageName": "install-test-workspace",
       "projectFolder": "build-tests/install-test-workspace",
       "reviewCategory": "tests",
-      "shouldPublish": false
+      "shouldPublish": false,
+      "subspaceName": "test-subspace"
     },
     {
       "packageName": "localization-plugin-test-01",
